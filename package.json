@@ -12,7 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.3.1",
-    "jsdom": "^23.1.0",
     "puppeteer": "^21.7.0"
   }
 }
