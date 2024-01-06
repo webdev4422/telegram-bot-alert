@@ -1,5 +1,7 @@
 import puppeteer from 'puppeteer'
-import jsdom from 'jsdom'
+import dotenv from 'dotenv'
+dotenv.config()
+// import jsdom from 'jsdom'
 // const dom = new jsdom.JSDOM(`<!DOCTYPE html><p>Hello world</p>`)
 // const text = dom.window.document.querySelector('p').textContent
 
@@ -27,15 +29,22 @@ async function run() {
     // document.querySelector('#super-lite-map > g.oblasts > path:nth-child(22)').innerHTML // return empty, there are not html, only attributes
     const svgPath = document.querySelector('#super-lite-map > g.oblasts > path:nth-child(22)')
     // let oblast = svgPath.attributes['data-oblast'].value
-    let alertInfo = null
-    if (svgPath.attributes['data-alert-id']) alertInfo = svgPath.attributes['data-alert-id'].value
-    return alertInfo
+    let alertId = null
+    if (svgPath.attributes['data-alert-id']) alertId = svgPath.attributes['data-alert-id'].value
+    return alertId
   })
 
+  // Send HTTP GET request to Telegram bot API
+  const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN
+  const telegramChatId = process.env.TELEGRAM_CHAT_ID
+  const telegramMessage = 'Повітряна тривога у Закарпатській області'
+
   if (data) {
-    console.log(data)
-  } else {
-    console.log('no data')
+    const response = await fetch(
+      `https://api.telegram.org/${telegramBotToken}/sendMessage?chat_id=${telegramChatId}&text=${telegramMessage}`
+    )
+    // const resData = await response.json()
+    // console.log(resData)
   }
 
   await browser.close()
