@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import puppeteer from 'puppeteer'
 import dotenv from 'dotenv'
 dotenv.config()
