@@ -7,6 +7,8 @@ dotenv.config()
 // const dom = new jsdom.JSDOM(`<!DOCTYPE html><p>Hello world</p>`)
 // const text = dom.window.document.querySelector('p').textContent
 
+let onAlert = false
+
 async function run() {
   // Launch the browser and open a new blank page
   const browser = await puppeteer.launch({ headless: 'new' })
@@ -34,7 +36,6 @@ async function run() {
   const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN
   const telegramChatId = process.env.TELEGRAM_CHAT_ID
   const telegramMessage = 'Повітряна тривога у Закарпатській області'
-  let onAlert = false
 
   if (alertId && !onAlert) {
     const response = await fetch(
