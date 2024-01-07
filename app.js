@@ -17,7 +17,7 @@ async function run() {
   // Wait for element to be loaded
   await page.waitForSelector('#super-lite-map > g.oblasts > path:nth-child(22)')
 
-  const data = await page.evaluate(() => {
+  const alertId = await page.evaluate(() => {
     // Browser context
     // Info: after many tries, I found that svg 'path' is not general html element, but it is related to ATTRIBUTE, this why, when logging html elements or nodes of html partent element of 'path' it show nothing -> 'HTMLUnknownElement'. Thus access data attributes with 'attributes' method
     // document.querySelector('#super-lite-map > g.oblasts > path:nth-child(22)').innerHTML // return empty, there are no html, only attributes
@@ -32,14 +32,15 @@ async function run() {
   const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN
   const telegramChatId = process.env.TELEGRAM_CHAT_ID
   const telegramMessage = 'Повітряна тривога у Закарпатській області'
+  let onAlert = false
 
-  // if (data) {
-  const response = await fetch(
-    `https://api.telegram.org/${telegramBotToken}/sendMessage?chat_id=${telegramChatId}&text=${telegramMessage}`
-  )
-  // const resData = await response.json()
-  // console.log(resData)
-  // }
+  if (alertId && !onAlert) {
+    const response = await fetch(
+      `https://api.telegram.org/${telegramBotToken}/sendMessage?chat_id=${telegramChatId}&text=${telegramMessage}`
+    )
+    onAlert = true
+  }
+  if (!alertId && onAlert) onAlert = false
 
   await browser.close()
 }
