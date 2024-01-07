@@ -35,16 +35,21 @@ async function run() {
   // Send HTTP GET request to Telegram bot API
   const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN
   const telegramChatId = process.env.TELEGRAM_CHAT_ID
-  const telegramMessage = 'Повітряна тривога у Закарпатській області'
+  const telegramMessageAlertOn = '🔴 Повітряна тривога у Закарпатській області'
+  const telegramMessageAlertOff = '🟢 Кінець тривоги'
 
   if (alertId && !onAlert) {
-    const response = await fetch(
-      `https://api.telegram.org/${telegramBotToken}/sendMessage?chat_id=${telegramChatId}&text=${telegramMessage}`
+    await fetch(
+      `https://api.telegram.org/${telegramBotToken}/sendMessage?chat_id=${telegramChatId}&text=${telegramMessageAlertOn}`
     )
     onAlert = true
   }
-  if (!alertId && onAlert) onAlert = false
-
+  if (!alertId && onAlert) {
+    await fetch(
+      `https://api.telegram.org/${telegramBotToken}/sendMessage?chat_id=${telegramChatId}&text=${telegramMessageAlertOff}`
+    )
+    onAlert = false
+  }
   await browser.close()
 }
 
