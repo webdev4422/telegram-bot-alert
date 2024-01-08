@@ -16,20 +16,19 @@ async function run() {
 
   // Navigate the page to a URL
   await page.goto('https://alerts.in.ua')
-  // await new Promise((r) => setTimeout(r, 2000))
 
   // Wait for element to be loaded
-  await page.waitForSelector('#super-lite-map > g.oblasts > path:nth-child(22)')
+  await page.waitForSelector('#super-lite-map > g.oblasts > path:nth-child(22)') // Not sure if it works properly
+  await new Promise((r) => setTimeout(r, 1000)) // Adding timeout fix 'alertId' return 'null' sometimes
 
   const alertId = await page.evaluate(() => {
     // Browser context
     // Info: after many tries, I found that svg 'path' is not general html element, but it is related to ATTRIBUTE, this why, when logging html elements or nodes of html partent element of 'path' it show nothing -> 'HTMLUnknownElement'. Thus access data attributes with 'attributes' method
     // document.querySelector('#super-lite-map > g.oblasts > path:nth-child(22)').innerHTML // return empty, there are no html, only attributes
-    const svgPath = document.querySelector('#super-lite-map > g.oblasts > path:nth-child(22)')
-    // let oblast = svgPath.attributes['data-oblast'].value
-    let alertId = null
-    if (svgPath.attributes['data-alert-id']) alertId = svgPath.attributes['data-alert-id'].value
-    return alertId
+    let dataAlertId = null
+    const svgPath = document.querySelector('#super-lite-map > g.oblasts > path:nth-child(28)')
+    if (svgPath.attributes['data-alert-id']) dataAlertId = svgPath.attributes['data-alert-id'].value
+    return dataAlertId // return 'data-alert-id' or 'null'
   })
 
   // Send HTTP GET request to Telegram bot API
@@ -50,6 +49,7 @@ async function run() {
     )
     onAlert = false
   }
+
   await browser.close()
 }
 
