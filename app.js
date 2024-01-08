@@ -26,7 +26,7 @@ async function run() {
     // Info: after many tries, I found that svg 'path' is not general html element, but it is related to ATTRIBUTE, this why, when logging html elements or nodes of html partent element of 'path' it show nothing -> 'HTMLUnknownElement'. Thus access data attributes with 'attributes' method
     // document.querySelector('#super-lite-map > g.oblasts > path:nth-child(22)').innerHTML // return empty, there are no html, only attributes
     let dataAlertId = null
-    const svgPath = document.querySelector('#super-lite-map > g.oblasts > path:nth-child(28)')
+    const svgPath = document.querySelector('#super-lite-map > g.oblasts > path:nth-child(22)')
     if (svgPath.attributes['data-alert-id']) dataAlertId = svgPath.attributes['data-alert-id'].value
     return dataAlertId // return 'data-alert-id' or 'null'
   })
