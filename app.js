@@ -63,10 +63,10 @@ async function run() {
   await browser.close()
 }
 
-// Run every 20 sec
+// Run every 30 sec
 setInterval(() => {
   run()
-}, 20000)
+}, 30000)
 
 function msToTime(milliseconds) {
   let h = Math.floor(milliseconds / 1000 / 60 / 60)
