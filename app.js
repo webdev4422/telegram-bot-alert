@@ -34,18 +34,28 @@ async function run() {
   // Send HTTP GET request to Telegram bot API
   const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN
   const telegramChatId = process.env.TELEGRAM_CHAT_ID
-  const telegramMessageAlertOn = '🔴 Повітряна тривога у Закарпатській області'
-  const telegramMessageAlertOff = '🟢 Кінець тривоги'
+  const telegramMessageAlertOn = '🔴 Повітряна тривога у Закарпатській області.'
+  const telegramMessageAlertOff = '🟢 Кінець тривоги.'
+
+  // Get time of alert in unix timestamp format
+  let alertTimeStart
+  // await new Promise((resolve) => setTimeout(() => resolve(), 1000)) // test time
 
   if (alertId && !onAlert) {
+    alertTimeStart = Date.now()
+
     await fetch(
       `https://api.telegram.org/${telegramBotToken}/sendMessage?chat_id=${telegramChatId}&text=${telegramMessageAlertOn}`
     )
     onAlert = true
   }
   if (!alertId && onAlert) {
+    let alertDuration = ` Тривалість: ${msToTime(Date.now() - alertTimeStart)}`
+
     await fetch(
-      `https://api.telegram.org/${telegramBotToken}/sendMessage?chat_id=${telegramChatId}&text=${telegramMessageAlertOff}`
+      `https://api.telegram.org/${telegramBotToken}/sendMessage?chat_id=${telegramChatId}&text=${
+        telegramMessageAlertOff + alertDuration
+      }`
     )
     onAlert = false
   }
@@ -57,3 +67,13 @@ async function run() {
 setInterval(() => {
   run()
 }, 20000)
+
+function msToTime(milliseconds) {
+  let h = Math.floor(milliseconds / 1000 / 60 / 60)
+  let m = Math.floor((milliseconds / 1000 / 60 / 60 - h) * 60)
+  let s = Math.floor(((milliseconds / 1000 / 60 / 60 - h) * 60 - m) * 60)
+  // s < 10 ? (s = `0${s}`) : (s = `${s}`)
+  // m < 10 ? (m = `0${m}`) : (m = `${m}`)
+  // h < 10 ? (h = `0${h}`) : (h = `${h}`)
+  return `${h}h:${m}m:${s}s`
+}
