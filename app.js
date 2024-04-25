@@ -39,7 +39,7 @@ async function run() {
 
   // Get time of alert in unix timestamp format
   let alertTimeStart
-  // await new Promise((resolve) => setTimeout(() => resolve(), 1000)) // test time
+  // await new Promise((resolve) => setTimeout(() => resolve(), 1000)) //test time
 
   if (alertId && !onAlert) {
     alertTimeStart = Date.now()
