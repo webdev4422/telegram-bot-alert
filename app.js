@@ -34,14 +34,12 @@ async function run() {
   // Send HTTP GET request to Telegram bot API
   const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN
   const telegramChatId = process.env.TELEGRAM_CHAT_ID
-  const telegramMessageAlertOn = '🔴 Повітряна тривога у Закарпатській області.'
-  const telegramMessageAlertOff = '🟢 Кінець тривоги.'
-
   // Get time of alert in unix timestamp format
   let alertTimeStart
   // await new Promise((resolve) => setTimeout(() => resolve(), 1000)) //test time
 
   if (alertId && !onAlert) {
+    const telegramMessageAlertOn = `🔴 Повітряна тривога у Закарпатській області.`
     alertTimeStart = Date.now()
 
     await fetch(
@@ -49,13 +47,14 @@ async function run() {
     )
     onAlert = true
   }
+
   if (!alertId && onAlert) {
-    let alertDuration = ` Тривалість: ${msToTime(Date.now() - alertTimeStart)}`
+    const alertTimeEnd = Date.now()
+    const alertDuration = msToTime(alertTimeEnd - alertTimeStart)
+    const telegramMessageAlertOff = `🟢 Кінець тривоги.\nТривалість: ${alertDuration}`
 
     await fetch(
-      `https://api.telegram.org/${telegramBotToken}/sendMessage?chat_id=${telegramChatId}&text=${
-        telegramMessageAlertOff + alertDuration
-      }`
+      `https://api.telegram.org/${telegramBotToken}/sendMessage?chat_id=${telegramChatId}&text=${telegramMessageAlertOff}`
     )
     onAlert = false
   }
