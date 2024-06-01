@@ -68,6 +68,7 @@ setInterval(() => {
 }, 30000)
 
 function msToTime(milliseconds) {
+  milliseconds = parseInt(milliseconds)
   let h = Math.floor(milliseconds / 1000 / 60 / 60)
   let m = Math.floor((milliseconds / 1000 / 60 / 60 - h) * 60)
   let s = Math.floor(((milliseconds / 1000 / 60 / 60 - h) * 60 - m) * 60)
