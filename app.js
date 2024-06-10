@@ -8,6 +8,7 @@ dotenv.config()
 // const text = dom.window.document.querySelector('p').textContent
 
 let onAlert = false
+let alertTimeStart // Date.now() // Get time of alert in unix timestamp format
 
 async function run() {
   // Launch the browser and open a new blank page
@@ -34,8 +35,7 @@ async function run() {
   // Send HTTP GET request to Telegram bot API
   const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN
   const telegramChatId = process.env.TELEGRAM_CHAT_ID
-  // Get time of alert in unix timestamp format
-  let alertTimeStart
+
   // await new Promise((resolve) => setTimeout(() => resolve(), 1000)) //test time
 
   if (alertId && !onAlert) {
@@ -49,7 +49,7 @@ async function run() {
   }
 
   if (!alertId && onAlert) {
-    const alertTimeEnd = Date.now()
+    let alertTimeEnd = Date.now()
     const alertDuration = msToTime(alertTimeEnd - alertTimeStart)
     const telegramMessageAlertOff = `🟢 Кінець тривоги.\nТривалість: ${alertDuration}`
 
@@ -68,7 +68,6 @@ setInterval(() => {
 }, 30000)
 
 function msToTime(milliseconds) {
-  milliseconds = parseInt(milliseconds)
   let h = Math.floor(milliseconds / 1000 / 60 / 60)
   let m = Math.floor((milliseconds / 1000 / 60 / 60 - h) * 60)
   let s = Math.floor(((milliseconds / 1000 / 60 / 60 - h) * 60 - m) * 60)
